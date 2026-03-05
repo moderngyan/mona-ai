@@ -50,4 +50,4 @@ Configure your providers in `.env`:
 
 ---
 
-_Built with ❤️ by the Advanced Agentic Coding team._
+_Built with ❤️ by the Advanced Agentic Coding team by Karan Gupa._
