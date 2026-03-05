@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # Laravel App
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: nebula-api
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - nebula-network
+    depends_on:
+      - mysql
+      - redis
+
+  # Web Server
+  nginx:
+    image: nginx:alpine
+    container_name: nebula-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - nebula-network
+
+  # Database
+  mysql:
+    image: mysql:8.0
+    container_name: nebula-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: nebula_db
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - nebula-network
+
+  # Cache & Queue
+  redis:
+    image: redis:alpine
+    container_name: nebula-redis
+    networks:
+      - nebula-network
+
+  # Queue Worker
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: nebula-worker
+    command: php artisan queue:work --verbose --tries=3 --timeout=90
+    volumes:
+      - ./:/var/www
+    networks:
+      - nebula-network
+    depends_on:
+      - redis
+
+  # Local LLM
+  ollama:
+    image: ollama/ollama:latest
+    container_name: nebula-ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - nebula-network
+
+networks:
+  nebula-network:
+    driver: bridge
+
+volumes:
+  ollama_data:

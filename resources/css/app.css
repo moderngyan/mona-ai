@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --color-chatgpt-main: #212121;
+  --color-chatgpt-sidebar: #171717;
+  --color-chatgpt-message: #2f2f2f;
+  --color-chatgpt-hover: #202123;
+  --color-chatgpt-text: #ececec;
+  --color-chatgpt-subtext: #9b9b9b;
+  --font-sans: 'Söhne', 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-chatgpt-main text-chatgpt-text font-sans selection:bg-white/20 overflow-hidden;
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { 
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+  }
+
+  @keyframes slide-down {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in {
+    animation: slide-down 0.4s ease-out forwards;
+  }
+}
+
+@layer components {
+  /* Minimalist utilities if needed */
+}
+
